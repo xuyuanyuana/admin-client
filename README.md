@@ -7,4 +7,4 @@
 
 ## 技术选型
 1） 后端选用node技术搭建服务器，数据库采用非关系型数据库mongodb，配合mongoose实现数据库的连接操作，数据传输采用md5进行加密，文件上传使用multer库
-2） 前后端交互使用axios发送ajax请求，接口测试工具为postman
+2） 前后端交互使用axios发送ajax请求，接口测试工具为postman  
