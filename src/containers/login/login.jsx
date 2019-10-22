@@ -1,23 +1,46 @@
 import React, { Component } from 'react';
-import {Form, Icon, Input, Button} from 'antd'
+import {Redirect} from 'react-router-dom'
+import { Form, Icon, Input, Button } from 'antd'
+import {connect} from 'react-redux'
 
 import logo from '../../assets/images/logo.png'
 import './login.less'
+// import axios from '../../api/ajax'
+import { loginAsync } from '../../redux/action-creators/user'
 
 const Item = Form.Item
+
+@connect(
+  state => ({hasLogin:state.user.hasLogin}),
+  {loginAsync}
+)
+@Form.create()
 class Login extends Component {
   handleSubmit = e=>{
     e.preventDefault()
-    /* 1.获取输入内容，
-      2，校验 
-      3.发送ajax请求
-    */
+  
   //  对表单进行统一验证
     const {validateFields} = this.props.form
-    validateFields((errors,{username,password})=>{
+    validateFields(async(errors,values)=>{
 // errors为收集好的错误，values为收集好的输入内容
       if(!errors){
-        console.log('发请求啦,用户名：'+username+'密码：'+password)
+        // 没有错误则发送ajax请求：注意这里后台只结束urlencoded形式的参数，对象其内部转化为json。所以请求会被拒绝
+        // 需在请求拦截器中转换好是数据
+        // 解决跨域问题，无需写基础路径，当前在哪就从哪里发
+        /* axios.post('/login',values).then(
+          (data) => {
+            console.log('登录成功')
+            console.log(data)
+          },
+          (msg) => {
+            console.log(msg)
+          }
+        ) */
+        let {username,password} = values
+        //console.log(username,password)
+        // 指定action去干活
+        this.props.loginAsync(username,password)
+        
       }else{
       }
     })
@@ -36,7 +59,7 @@ class Login extends Component {
       callback('密码必须大于等于4位')
     }else if(value.length > 12){
       callback('密码必须小于等于12位')
-    }else if(/^[a-zA-Z0-9]+$/.test(value)){
+    }else if(!/^[a-zA-Z0-9_]+$/.test(value)){//如果密码不是这样组成的才报错，注意！
       callback('必须是英文、数字组成')
     }else{
       // 验证通过，注意：callback必须被调用
@@ -45,10 +68,13 @@ class Login extends Component {
   }
 
   render() {
-    console.log(this)
     //经过 Form.create 包装的组件将会自带 this.props.form 属性
     const {getFieldDecorator} = this.props.form
 
+    const {hasLogin} = this.props
+    if(hasLogin){
+      return <Redirect to="/"/>
+    }
     return (
       <div>
           <header className='login-header'>
@@ -113,5 +139,5 @@ class Login extends Component {
     )
   }
 }
-const wrap = Form.create()(Login)
-export default  wrap
+
+export default  Login
