@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-import {Route,Switch} from 'react-router-dom'
+import {Router,Route,Switch} from 'react-router-dom'
 
 import Login from './containers/login/login'
 import Admin from './containers/admin/admin'
-import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom';
+import history from './history'
+
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
+      <Router history={history}>
         <Switch>
           <Route path='/login' component={Login} exact/>
           <Route path='/' component={Admin} />
         </Switch>
-      </BrowserRouter>
+      </Router>
     );
   }
 }
