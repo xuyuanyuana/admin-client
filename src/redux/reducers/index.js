@@ -1,16 +1,15 @@
-import {combineReducers} from 'redux'
+import { combineReducers } from 'redux'
 
 import user from './user'
-import hhh from './hhh'
+import xxx from './xxx'
 
+// 生成总的state
 /* 
-总state的结构:
   {
-    user:{'username':111}
-    hhh: 'lallaa'
+    user: { user:{},
+            token:'',
+            hasLogin:false},
+    xxx:''
   }
 */
-export default combineReducers({
-  user,
-  hhh
-})
+export default combineReducers({user,xxx})
