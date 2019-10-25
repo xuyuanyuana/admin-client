@@ -1,5 +1,6 @@
 import { SAVE_USER_TOKEN,REMOVE_USER_TOKEN } from '../action-type'
 import { reqLogin } from '../../api'
+import storage from '../../utils/storage'
 // action是一个对象
 /* 
   同步action返回为对象
@@ -14,8 +15,10 @@ export const loginSync = (username,password) => {
     const result = await reqLogin(username,password)
     const {user,token} = result.data
     // 存储到local
-    localStorage.setItem('user_key',JSON.stringify(user))
-    localStorage.setItem('token_key',token)
+    // localStorage.setItem('user_key',JSON.stringify(user))
+    // localStorage.setItem('token_key',token)
+    storage.set('user_key',user)
+    storage.set('token_key',token)
     // 2,得到结果后分发同步action
     dispatch(saveUserToken(user,token))
   }
@@ -26,7 +29,9 @@ export const saveUserToken = (user,token) => ({type:SAVE_USER_TOKEN,data:{user,t
 
 export const removeUserToken = () => {
   // remove local
-  localStorage.removeItem('user_key')
-  localStorage.removeItem('token_key')
+  // localStorage.removeItem('user_key')
+  // localStorage.removeItem('token_key')
+  storage.remove('user_key')
+  storage.remove('token_key')
   return {type:REMOVE_USER_TOKEN}
 }

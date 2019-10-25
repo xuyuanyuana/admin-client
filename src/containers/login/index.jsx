@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Form,Input,Icon,Button } from 'antd'
 import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
 
 import logo from './images/logo.png'
 import './login.less'
 import { loginSync } from '../../redux/action-creatores/user'
+import withCheckLogin from '../with-check-login'
 
 const Item = Form.Item
 
@@ -14,6 +14,7 @@ const Item = Form.Item
   {loginSync}
 )
 @Form.create()
+@withCheckLogin
 class Login extends Component {
   handleSubmit = (e) => {
     // 阻止默认行为的跳转
@@ -34,12 +35,8 @@ class Login extends Component {
   render() {
     const {getFieldDecorator} = this.props.form
 
-    const {hasLogin} = this.props.user
-    if(hasLogin){
-      return <Redirect to="/"/>
-    }
     return (
-      <div>
+      <div className='login'>
       <header className='login-header'>
         <img src={logo} alt="logo"/>
         <h1>后台管理系统</h1>

@@ -79,7 +79,6 @@ th:not([align]) {
   text-align: left;
 }
 
-body{
-  background: url(../images/bg.jpg);
+#root{
   height: 100%;
 }

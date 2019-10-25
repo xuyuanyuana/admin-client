@@ -1,0 +1,42 @@
+.admin-header{
+  height: 80px;
+  background-color: white;
+  .header-top{
+    height: 40px;
+    border-bottom:1px solid green;
+    text-align: right;
+    line-height: 40px;
+  }
+  .header-bottom{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    &>span{
+      position: relative;
+      width: 30%;
+      font-size: 20px;
+      text-align: center;
+      &::after{
+        content: '';
+        position: absolute;
+        left:50%;
+        top:35px;
+        transform: translateX(-50%);
+        border-top: 20px solid white;
+        border-right: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+        border-left: 20px solid transparent;
+      }
+    }   
+    &>div{
+      width: 70%;
+      text-align: right;
+      margin-right: 20px;
+      img{
+        margin: 0 10px;
+        width: 30px;
+        height: 20px;
+      }
+    }
+  }
+}
