@@ -1,32 +1,63 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import { Modal, Icon,Button } from 'antd'
+import dayjs from 'dayjs'
+import { withRouter } from 'react-router-dom'
+import screenfull from 'screenfull'
+
 import './index.less'
 import LinkButton from '../../../components/link-button'
 import { connect } from 'react-redux'
-import withCheckLogin from '../../with-check-login'
-import dayjs from 'dayjs'
-import { withRouter } from 'react-router-dom'
 import { removeUserToken } from '../../../redux/action-creatores/user'
+import { reqWeather } from '../../../api'
 
 @connect(
-  state => ({username:state.user.user.username}),
+  state => ({username:state.user.user.username,headerTitle:state.headerTitle}),
   {removeUserToken}
 )
 @withRouter
-@withCheckLogin
 class AdminHeader extends Component {
   state = {
-    currentTime:dayjs().format('YYYY-MM-DD HH:mm:ss')
+    currentTime:dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    weather:{},
+    isScreenFull:false
   }
 
   logout = () => {
-    console.log('退出登录')
-    this.props.removeUserToken()
+    Modal.confirm({
+      title: '确定退出吗?',
+      onOk: () => {
+        this.props.removeUserToken()
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+
+  getWeather = async(city) => {
+    let {dayPictureUrl,weather} = await reqWeather(city)
+    // 得到的是一个对象
+    this.setState({
+      weather:{dayPictureUrl,weather}
+    })
+  }
+
+  screenFull = () => {
+    if (screenfull.isEnabled) {
+      screenfull.toggle();
+    }
   }
 
   componentDidMount() {
     this.intervalId = setInterval(() => {
       this.setState({currentTime:dayjs().format('YYYY-MM-DD HH:mm:ss')})
     }, 1000);
+    this.getWeather('北京')
+    screenfull.onchange(()=> {
+      this.setState({
+        isScreenFull: !this.state.isScreenFull
+      })
+    }) 
   }
   
   componentWillMount() {
@@ -34,21 +65,25 @@ class AdminHeader extends Component {
   }
 
   render() {
-    const {currentTime} = this.state
-    const {pathname} = this.props.location
-    console.log(this.props)
+    const {currentTime,isScreenFull} = this.state
+    const {headerTitle} = this.props
+    
+    const {dayPictureUrl,weather} = this.state.weather
     return (
       <div className='admin-header'>
           <div className="header-top">
+            <Button size="small" className="screen-full" onClick={this.screenFull}>
+              <Icon type={isScreenFull?'fullscreen-exit':'fullscreen'} />
+            </Button>
             <span>欢迎{this.props.username}</span>
             <LinkButton onClick={this.logout}>退出</LinkButton>
           </div>
           <div className="header-bottom">
-            <span>{pathname}</span>
+            <span>{headerTitle}</span>
             <div>
               <span>{currentTime}</span>
-              <img src="http://api.map.baidu.com/images/weather/day/xiaoyu.png" alt="yin"/>
-              <span>小雨转多云</span>
+              <img src={dayPictureUrl} alt="yin"/>
+              <span>{weather}</span>
             </div>
           </div>
       </div>

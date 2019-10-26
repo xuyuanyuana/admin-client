@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form,Input,Icon,Button } from 'antd'
 import { connect } from 'react-redux'
 
-import logo from './images/logo.png'
+import logo from '../../asset/images/logo.png'
 import './login.less'
 import { loginSync } from '../../redux/action-creatores/user'
 import withCheckLogin from '../with-check-login'

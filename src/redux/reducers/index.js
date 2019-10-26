@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
 import user from './user'
-import xxx from './xxx'
+import headerTitle from './header-title'
 
 // 生成总的state
 /* 
@@ -9,7 +9,7 @@ import xxx from './xxx'
     user: { user:{},
             token:'',
             hasLogin:false},
-    xxx:''
+    headerTitle:'主页'
   }
 */
-export default combineReducers({user,xxx})
+export default combineReducers({user,headerTitle})

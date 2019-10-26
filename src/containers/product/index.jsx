@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 
-
-class Home extends Component {
+class Product extends Component {
   render() {
     return (
       <div>
-        home
+        product
       </div>
     );
   }
 }
 
-export default Home;
+export default Product;
