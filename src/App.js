@@ -11,7 +11,7 @@ class App extends Component {
       <Router history={history}>
         <Switch>
           <Route path='/login' component={Login} exact/>
-          <Route path='/' component={Admin} />
+          <Route path='/' component={Admin}/>
         </Switch>
       </Router>
     );

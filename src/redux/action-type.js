@@ -1,3 +1,8 @@
 export const SAVE_USER_TOKEN = 'save_user_token'
 export const REMOVE_USER_TOKEN = 'remove_user_token'
 export const SET_HEADER_TITLE = 'set_header_title'
+export const GET_CATEGORY_List = 'get_category_list'
+export const ADD_CATEGORY = 'add_category'
+export const UPDATE_CATEGORY = 'update_category'
+export const GET_PRODUCT_LIST = 'get_product_list'
+export const GET_SEARCH_PRODUCT_LIST = 'get_search_product_list'
