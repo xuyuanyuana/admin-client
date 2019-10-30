@@ -4,7 +4,7 @@ import {
   ADD_CATEGORY,
   UPDATE_CATEGORY
 } from '../action-type'
-import { reqCategoryList,reqAddCategory,reqUpdateCategory } from '../../api'
+import { reqCategoryList,reqAddCategory,reqUpdateCategory } from '../../api/category'
 
 const getCategoryList = (category) => ({type:GET_CATEGORY_List,data:category})
 

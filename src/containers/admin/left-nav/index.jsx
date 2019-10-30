@@ -3,6 +3,7 @@ import './index.less'
 import { Menu, Icon } from 'antd';
 import { Link,withRouter} from 'react-router-dom'
 import { connect } from 'react-redux'
+import { withTranslation, getI18n } from 'react-i18next'
 
 import logo from '../../../asset/images/logo.png'
 import menuList from '../../../config/menu-list'
@@ -16,6 +17,7 @@ const {Item } = Menu
   {setHeaderTitle}
 )
 @withRouter
+@withTranslation()
 class LeftNav extends Component {
   state = {
     collapsed: false,
@@ -27,14 +29,14 @@ class LeftNav extends Component {
         if(!item.children){
           if(item.key === path && this.props.headerTitle !== path){
             // 更新：对比state中的title是否和当先选中的path相等，不相等的话进行更新
-            this.props.setHeaderTitle(item.title)
+            this.props.setHeaderTitle(this.props.t(item.title))
           }
           // Item
           return (
             <Item key={item.key}>
               <Link to={item.key}>
                   <Icon type={item.icon} />
-                  <span>{item.title}</span>
+                  <span>{this.props.t(item.title)}</span>
               </Link>
             </Item>
           )        
@@ -42,7 +44,8 @@ class LeftNav extends Component {
           // SubMenu
           // path=/charts/bar  item.key=/products | /charts
           console.log(path)
-          if( item.children.some(item => item.key === path)){
+          // indexOf返回一个number类型的值，item.key在path中第一次出现的index
+          if( item.children.some(item => path.indexOf(item.key) === 0)){
             this.openKey = item.key
           }
           console.log('openKey'+this.openKey)
@@ -63,6 +66,12 @@ class LeftNav extends Component {
     })
   }
 
+  
+  componentDidMount () {
+    // setInterval(() => {
+    //   this.props.i18n.changeLanguage(this.props.i18n.language==='en' ? 'zh-CN' : 'en')
+    // }, 2000);
+  }
   render() {
     const selectKey = this.props.location.pathname
     // 注意：openKey需要等待getMenuList执行完才有openKey
@@ -72,7 +81,7 @@ class LeftNav extends Component {
       <div className="left-nav">
         <header>
           <img src={logo} alt="logo"/>
-          <h1>硅谷后台</h1>
+          <h1>{this.props.t('title')}</h1>
         </header>
 
       <Menu

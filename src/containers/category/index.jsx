@@ -127,11 +127,12 @@ class Category extends Component {
     )            
     return (
       <Card extra={extra}>
-        <Table dataSource={this.props.cateList} 
+        <Table 
+              dataSource={this.props.cateList} 
               columns={columns}  
               bordered
               pagination={{pageSize: 5, showQuickJumper: true}} //分页显示，快速搜索跳转    
-              />
+        />
         <Modal
           title="添加分类"
           visible={this.state.isShowAdd}

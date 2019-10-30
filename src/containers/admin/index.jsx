@@ -1,21 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Layout } from 'antd';
-import {  Switch,Route,Redirect } from 'react-router-dom'
 
 import { reqUsers } from '../../api/'
 import LeftNav from './left-nav'
 import AdminHeader from './header'
-import Home from '../home'
-import Category from '../category'
-import Product from '../product'
-import ProductDetail from '../product/detail'
-import ProductAddUpdate from '../product/add-update'
-import User from '../user'
-import Role from '../role'
-import Line from '../line'
-import Bar from '../bar'
-import Pie from '../pie'
 import { removeUserToken } from '../../redux/action-creatores/user'
 import withCheckLogin from '../with-check-login'
 const { Footer, Sider, Content } = Layout;
@@ -36,19 +25,7 @@ class Admin extends Component {
         <Layout>
           <AdminHeader/>
           <Content style={{margin:'30px 15px 0 ',backgroundColor:'white'}}>
-              <Switch>
-                <Route path='/home' component={Home}/>
-                <Route path='/category' component={Category}/>
-                <Route path='/product' component={Product} exact/>
-                <Route path='/product/detail' component={ProductDetail}/>
-                <Route path='/product/addUpdate' component={ProductAddUpdate}/>
-                <Route path='/user' component={User}/>
-                <Route path='/role' component={Role}/>
-                <Route path='/charts/bar' component={Bar}/>
-                <Route path='/charts/line' component={Line}/>
-                <Route path='/charts/pie' component={Pie}/>
-                <Redirect to='/home'/>
-              </Switch>
+              {this.props.children}
           </Content>
           <Footer style={{textAlign:'center'}}>推荐使用谷歌浏览器，可以获得更佳页面操作体验</Footer>
         </Layout>

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Card,Table,Button,Select,Input,Icon,message } from 'antd'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 
-import { getProductListAsync,getSearchProductList } from '../../redux/action-creatores/products'
+import { getProductListAsync,getSearchProductList,updateProductStatusAsync } from '../../redux/action-creatores/products'
 import { PAGE_SIZE } from '../../config'
+import memory from '../../utils/memory'
 
 const { Option } = Select
 // admin的子路由组件——商品列表
@@ -13,39 +13,51 @@ const { Option } = Select
   state => ({
     total:state.products.total,
     list:state.products.list}),
-  {getProductListAsync,getSearchProductList}
+  {getProductListAsync,getSearchProductList,updateProductStatusAsync}
 )
 class Product extends Component {
   state = {
     searchType:'productName',
     searchName:'',
-    isSearch:false
   }
   
+  // 获取商品列表
   getProductList = async(pageNum) => {
+    console.log(this.isSearch)
     let msg
     if(this.isSearch){
       // 发送搜索请求
       const {searchType,searchName} = this.state
+      console.log(searchType)
+      console.log(searchName)
       if(!searchName){
-        this.isSearch = false
+        return
       }
-      msg = await this.props.getSearchProductList({searchType,searchName,pageNum,PAGE_SIZE})
+      // 注意：PAGE_SIZE获取到的只是一个值，需要传递属性名
+      msg = await this.props.getSearchProductList({searchType,searchName,pageNum,pageSize:PAGE_SIZE})
       this.isSearch = false
     }else{
       // 发送一般请求
       msg = await this.props.getProductListAsync(pageNum,PAGE_SIZE)
     }
 
-    if(!msg){
-      // 成功
-      message.success('获取商品列表成功')
-    }else{
+    if(msg){
       message.error(msg)
     }
 
   }
 
+  updateProduct = async(_id,status) => {
+    console.log(_id)
+    console.log('当前传递的'+status)
+    let msg = await this.props.updateProductStatusAsync(_id,status)
+    if(!msg){
+      // 成功
+      message.success('成功')
+    }else{
+      message.error(msg)
+    }
+  }
   componentDidMount(){
     this.getProductList(1)
   }
@@ -53,6 +65,8 @@ class Product extends Component {
   render() {
     const { searchType,searchName } = this.state
     const { total,list } = this.props
+
+    // 列信息
     const columns = [
       {
         title: '商品名称',
@@ -70,21 +84,53 @@ class Product extends Component {
       {
         width: 100,
         title: '状态',
-        dataIndex: 'status',
-        render: (price) => (
-          <span>
-            <Button type="primary">下架</Button>
-            <span>在售</span>
-          </span>
-        )
+        render: ({_id,status}) => {  //2是下架。1是在售
+          let btnText = '上架'
+          let spanText = '在售'
+          if(status === 2){
+            btnText = '下架'
+            spanText = '已下架'
+          } 
+          return (<span>
+                      <Button 
+                        type="primary"
+                        onClick={
+                          () => {
+                            this.updateProduct(_id,status===1?2:1)
+                          }
+                        }
+                      >
+                      {btnText}
+                      </Button>
+                      <span>{spanText}</span>
+                  </span>)
+        }
       },
       {
         width: 100,
         title: '操作',
         render: (product) => (
           <span>
-            <Button type="link">详情</Button>
-            <Button type="link">修改</Button>
+            <Button 
+              type="link"
+              onClick={
+                () => {
+                  // 需携带商品信息
+                  memory.product = product
+                  this.props.history.push(`/product/detail/${memory.product._id}`)
+                }
+              }
+            >详情</Button>
+            <Button 
+              type="link" 
+              onClick={() => {
+                // 需携带商品信息
+                memory.product = product
+                this.props.history.push('/product/addUpdate')
+              }}
+            >
+              修改
+            </Button>
           </span>
         )
       },
@@ -108,9 +154,8 @@ class Product extends Component {
         <Button
             type="primary" 
             onClick={() => {
-              this.setState({
-                isSearch:true
-              })
+              console.log(11111111111111111111111111111)
+              this.isSearch = true
               this.getProductList(1)
             }}
           >搜索
@@ -119,13 +164,16 @@ class Product extends Component {
     )
 
     const extra = (
-      <Link to="/product/addUpdate">
-        <Button type="primary">
+        <Button type="primary" onClick={() => {
+          // 注意点击添加时清空内存，以防止跳转过修改在跳转添加
+          memory.product={}
+          this.props.history.push('/product/addUpdate')
+        }}>
           <Icon type='plus'/>
           添加商品
         </Button>
-      </Link>
     )
+    //const { products,total } = this.state
     return (
       <Card
         title={search}
@@ -139,7 +187,7 @@ class Product extends Component {
             pageSize: PAGE_SIZE, 
             total, 
             // onChange:  (page) => {this.getProducts(page)}
-            onChange:  this.getProducts
+            onChange:  this.getProductList
           }}
         >
         </Table>
