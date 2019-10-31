@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { getCategoryListAsync } from '../../redux/action-creatores/categorys'
 import { addOrUpdateProductAsync } from '../../redux/action-creatores/products'
 import memory from '../../utils/memory'
+import PictureWall from './picture-wall'
 
 import LinkButton from '../../components/link-button'
 const {Item} = Form
@@ -148,11 +149,11 @@ class AddUpdate extends Component {
           </Item>
 
           <Item label="商品图片">
-        
+            <PictureWall/>
           </Item>
 
           <Item label="商品详情">
-            <Input placeholder='商品价格'  value={product.detail}/>
+            {/* <RichTextEditor detail={product.detail} />  */}
           </Item>
           <Button type="primary" onClick={this.submit}>提交</Button>
         </Form>

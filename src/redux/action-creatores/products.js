@@ -1,6 +1,6 @@
 // 管理所有商品的action
 import { reqProductList,reqSearchProductList,reqAddOrUpdateProduct,reqUpdateProductStatus } from '../../api/product'
-import { GET_PRODUCT_LIST,GET_SEARCH_PRODUCT_LIST,ADD_PRODUCT,UPDATE_PRODUCT,UPDATE_PRODUCT_STATUS } from '../action-type'
+import { GET_PRODUCT_LIST,GET_SEARCH_PRODUCT_LIST,UPDATE_PRODUCT_STATUS } from '../action-type'
 
 // 异步获取所有商品
 export const getProductListAsync = (pageNum,pageSize) => {

@@ -12,7 +12,8 @@ import Pie from '../components/charts/pie'
 const routes = [
   {
     path: '/home', // 路由路径
-    component: Home // 组件
+    component: Home, // 组件
+    isPublic:true
   },
   {
     path: '/category', // 路由路径

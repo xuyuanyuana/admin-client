@@ -26,3 +26,7 @@ export const reqWeather = (city) => {
     })
 }
 
+// 获取所有角色信息
+export const reqRoleList =  () => axios.get('/manage/role/list')
+
+export const reqUpdateRole = (authInfo) => axios.post('/manage/role/update',authInfo)

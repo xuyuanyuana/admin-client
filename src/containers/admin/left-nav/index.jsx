@@ -13,7 +13,7 @@ const { SubMenu } = Menu;
 const {Item } = Menu
 
 @connect(
-  state => ({headerTitle:state.headerTitle}),
+  state => ({headerTitle:state.headerTitle,user:state.user.user}),
   {setHeaderTitle}
 )
 @withRouter
@@ -23,9 +23,28 @@ class LeftNav extends Component {
     collapsed: false,
   };
 
+    /* 
+    判断当前登陆用户是否有此item对应的权限
+    1. 当前用户是admin
+    2. item是公开的
+    3. item的key在menus中
+    4. item的某个子item的key在menus中
+    */
+  hasAuth = (item) => {
+    const {username, role: {menus}} = this.props.user
+    if (username==='admin' || item.isPublic || menus.indexOf(item.key)!==-1) {
+      return true
+    } else if (item.children) { // 4. item的某个子item的key在menus中
+      return item.children.some(cItem => menus.indexOf(cItem.key)!==-1)
+    }
+
+    return false
+  }
+
   getMenuList = (menuList) => {
     return menuList.map((item) => {
         const path = this.props.location.pathname
+        if(this.hasAuth(item))
         if(!item.children){
           if(item.key === path && this.props.headerTitle !== path){
             // 更新：对比state中的title是否和当先选中的path相等，不相等的话进行更新
